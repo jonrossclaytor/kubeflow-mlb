@@ -5,4 +5,4 @@ RUN pip install google-cloud-storage
 COPY ./ /root/
 
 RUN chmod 777 -R /root
-ENTRYPOINT [ "python", "/root/move_metrics.py" ]
+ENTRYPOINT [ "python", "/root/feature_eng.py" ]
