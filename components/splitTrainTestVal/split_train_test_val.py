@@ -6,15 +6,9 @@ import numpy as np
 import pandas as pd
 
 
-def run(argv=None):
+def run(argv=None): #
     parser = argparse.ArgumentParser()
     parser.add_argument('--pitch_type', dest='pitch_type', default='SI', help='Select the pitch type to evaluate')
-    '''
-    parser.add_argument('--project', dest='project', default='ross-kubeflow', help='Select the gcp project to run this job')
-    parser.add_argument('--staging_location', dest='staging_location', default='gs://dataflow-holding/dataflow_stage/', help='Select the staging location for this job')
-    parser.add_argument('--temp_location', dest='temp_location', default='gs://dataflow-holding/dataflow_tmp/', help='Select the temp location for this job')
-    parser.add_argument('--setup_file', dest='setup_file', default='/root/setup.py', help='Config options for the pipeline')
-    '''
 
     known_args, _ = parser.parse_known_args(argv)
 
@@ -35,7 +29,7 @@ def run(argv=None):
     # load raw data into DataFrame
     df = pd.read_csv('metrics.csv')
     # omit unnecessary pitch types
-    all_pitchtypes = ['FF','SI','KC','FC','PO','SL','FT','CU','CH','AB','FS','KN','SC','EP','FO','UN']             
+    all_pitchtypes = ['FT','FS','CH','FF','SL','CU','FC','SI','KC','EP','KN','FO']            
     all_pitchtypes.remove(pitch_type)
     df = df.drop(all_pitchtypes, axis=1)
 
