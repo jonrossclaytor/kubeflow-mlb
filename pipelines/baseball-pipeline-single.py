@@ -16,7 +16,7 @@ def collect_stats_op(): #symbol
 def feature_eng_op(): 
     return dsl.ContainerOp(
         name='Feature Engineering',
-        image='gcr.io/ross-kubeflow/feature-eng:latest'       
+        image='gcr.io/ross-kubeflow/feature-eng:latest',   
         
     ).apply(gcp.use_gcp_secret('user-gcp-sa'))
 
@@ -76,13 +76,16 @@ def find_threshold_op(pitch_type):
     ).apply(gcp.use_gcp_secret('user-gcp-sa'))
 
 
-def evaluate_model_op(pitch_type): 
+def evaluate_model_op(pitch_type, dummy1=None): 
     return dsl.ContainerOp(
-        name='Eval',
+        name='Evaluate Models',
         image='gcr.io/ross-kubeflow/evaluate-model:latest',
         arguments=[
             '--pitch_type', pitch_type
-        ]      
+        ],
+        file_outputs={
+            'data': '/root/dummy.txt',
+        } 
         
     ).apply(gcp.use_gcp_secret('user-gcp-sa'))
 
@@ -90,18 +93,15 @@ def evaluate_model_op(pitch_type):
 
 @dsl.pipeline(
     name='Sequential pipeline',
-    description='A pipeline with two sequential steps.'
+    description='A pipeline with sequential steps.'
 )
 def sequential_pipeline():  
     """A pipeline with sequential steps.""" 
-
-
+    
     refresh_data_pipeline = feature_eng_op().after(collect_stats_op())
-    all_pitchtypes = ['FT','FS','CH','FF','SL','CU','FC','SI','KC','EP','KN','FO']
 
-    for pitch_type in all_pitchtypes:
-        train_test_val_task = evaluate_model_op(pitch_type).after(find_threshold_op(pitch_type).after(host_xgboost_op(pitch_type).after(train_xgboost_op(pitch_type).after(tune_hp_op(pitch_type).after(train_test_val_op(pitch_type).after(refresh_data_pipeline))))))
-
+    FT_task = evaluate_model_op('FT').after(find_threshold_op('FT').after(host_xgboost_op('FT').after(train_xgboost_op('FT').after(tune_hp_op('FT').after(train_test_val_op('FT').after(refresh_data_pipeline)))))) 
+    
 
 if __name__ == '__main__':
     kfp.compiler.Compiler().compile(sequential_pipeline, __file__ + '.zip')

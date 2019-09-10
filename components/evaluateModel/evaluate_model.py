@@ -131,8 +131,10 @@ def run(argv=None):
     plotConfusionMatrix(test_labels, predicted_test_labels, classes=np.asarray([0,1]))
     '''
 
-
-
+    # write fake file to pass as output
+    f = open('/root/dummy.txt', 'w')
+    f.write('dummy text')
+    f.close()
 
 
 if __name__ == '__main__':

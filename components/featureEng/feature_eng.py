@@ -5,14 +5,7 @@ import pandas_gbq
 
 
 def run(argv=None):
-    '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--runner', dest='runner', default='DataflowRunner', help='Select between DirectRunner vs DataflowRunner')
-    parser.add_argument('--project', dest='project', default='ross-kubeflow', help='Select the gcp project to run this job')
-    parser.add_argument('--staging_location', dest='staging_location', default='gs://dataflow-holding/dataflow_stage/', help='Select the staging location for this job')
-    parser.add_argument('--temp_location', dest='temp_location', default='gs://dataflow-holding/dataflow_tmp/', help='Select the temp location for this job')
-    parser.add_argument('--setup_file', dest='setup_file', default='/root/setup.py', help='Config options for the pipeline')
-    '''
+
 
     SQL = """
     SELECT  
